@@ -2,6 +2,52 @@
 	<head>
 	</head>
 	<body>
-		Project 1 here
+		<h1>Overview</h1>
+		<p>
+			We built the functionality to rasterize triangles and fill them through either using a single color, by interpolating between the colors at the vertices through barycentric coordinates, 
+			or by mapping a texture to it. We implemented multiple antialiasing methods such as supersampling, bilinear sampling, mipmaps, and trilinear filtering. We also wrote the functionality 
+			basic transforms such as translation, rotation, and scaling. The most interesting thing we've learned is how to use barycentric coordinates to find the correct texture coordinates along
+			with using interpolation in trilinear filtering to reduce aliasing.
+		</p>
+		<h1>Task 1</h1>
+		<p>
+			To rasterize a triangle, we first find the bounding box of the triangle through taking the min and max x and y coordinates of the vertices. We then iterate through all the x,y pairs in this
+			bounding box and use the three line tests to determine whether each x,y pair belongs in the triangle. In other words, we check each sample within the bounding box of the triangle. To ensure
+			that the triangle gets drawn regardless of the winding order of the vertices, we basically check whether or not the line tests produce the same sign. Lastly, if this x,y point is inside the 
+			triangle, we rasterize the pixel by calling fill_pixel.
+		</p>
+		<img src="task2_1.png">
+		<h1>Task 2</h1>
+		<p>
+			To implement supersampling, we modified our rasterize_triangle function such that for every x,y pair, we sample it sample_rate times in a grid pattern. The means we have 4 nested for loops, 
+			with the two outer loops iterating over each x,y pair, and the two inner for loops each iterating sqrt(sample_rate) times. To calculate the precise x position, we start by adding an intial
+			offset of 1/(2 * sqrt(sample_rate)), and incement by 1 / sqrt(sample_rate) for each i where i is a counter in the inner for loop. We do the same thing with y, but with the other inner for
+			loop counter. We then use the same three line tests on our new x,y point to check whether it needs to be sampled. In the case that it needs to be sampled, instead of calling fill_pixel we 
+			instead put the Color in the sample_buffer in its respective spot given the x,y coordinate. Using the sample_buffer means we have to modify the rasterization pipeline, such as in the functions
+			set_sample_rate and set_framebuffer_target to resize our sample_buffer to a size of width * height * sample_rate. We also needed to modify resolve_to_framebuffer to average the sample_rate
+			Colors for each pixel in the original size and use that color in the frame buffer.
+		</p>
+		<p>
+			Supersampling is useful because it is a way of antialiasing which is acheived by increasing the sampling rate. For example, in the triangles below, we reduce jaggies through supersampling. As 
+			we increase sampling rate, the edges and corners of the triangle become smoother and continuous because by sampling at more points the edges will have a more gradual change rather than a sharp
+			change and we are less likely to skip over parts of a skinny triangle corner which would otherwise cause floating pixels.
+		</p>
+		<img src="task2_1.png">
+		<img src="task2_4.png">
+		<img src="task2_16.png">
+		<h1>Task 3</h1>
+		<p>Lorem ipsum</p>
+		<h1>Task 4</h1>
+		<p>The barycentric coordinate is essentially a way of finding where a point inside a triangle is relative to its vertices. We do this by finding the weights of each vertex for each point and this 
+			would allow us to interpolate within the triangle through a weighted sum of the vertices. For example, in the image below, each vertex of the triangle has a pure color of red, green, or blue. In 
+			the area in between the vertices, the value of a pixel is a mix of red, green, and blue, with the strength of each component relative to the points distance from its respective vertex. 
+		</p>
+		<img src="task4_interpolated_triangle.png">
+		<img src="task4_colorcircle.png">
+		<h1>Task 5</h1>
+		<p>Lorem ipsum</p>
+		<h1>Task 6</h1>
+		<p>Lorem ipsum</p>
+
 	</body>
 </html>
