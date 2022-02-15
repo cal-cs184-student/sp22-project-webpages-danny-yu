@@ -45,9 +45,70 @@
 		<img src="task4_interpolated_triangle.png">
 		<img src="task4_colorcircle.png">
 		<h1>Task 5</h1>
-		<p>Lorem ipsum</p>
+		<p>
+			Given that we want to apply a texture to a pixel x,y in screen space, we will need to convert it to a point u,v in texture space for pixel sampling. We can find the u,v coordinates through the barycentric coordinates
+			given that we know the u,v positions of the vertices of the triangle. After acquiring the u,v coordinate, we can sample it with nearest pixel or bilinear filtering. In nearest pixel, We return the 
+			color of the nearest pixel to our u,v position. In bilinear filtering, we interpolate between the 4 nearest pixels (by doing linear interpolation 3 times) and then return the color.
+		</p>
+		<table style="border: 1px solid">
+			<tr>
+				<td style="text-align: center; font-size: 24px">Sample Rate</td>
+				<td style="text-align: center; font-size: 24px">Nearest</td>
+				<td style="text-align: center; font-size: 24px">Bilinear</td>
+			</tr>
+			<tr>
+				<td style="text-align: center; font-size: 40px">1</td>
+				<td><img src="task5_nearest_1.png"></td>
+				<td><img src="task5_bilinear_1.png"></td>
+			</tr>
+			<tr>
+				<td style="text-align: center; font-size: 40px">16</td>
+				<td><img src="task5_nearest_16.png"></td>
+				<td><img src="task5_bilinear_16.png"></td>
+			</tr>
+		</table>
+		<p>
+			We can tell that in bilinear filtering the image is smoother and less sharp compared to nearest pixel, as the color of each pixel in the image is averaged between 4 pixels in texture space rather than 
+			just one. The difference between nearest pixel and bilinear filtering is more clear when the frequency of the image far outstrips the sampling rate. For example, when the sampling rate is 16, it is harder
+			to tell the difference between nearest and bilinear since the sampling rate is already high relative to the image frequency. However, on sampling rate 1, one can noticeably discern that bilinear filtering
+			smoothens the image compared ot nearest pixel.
+		</p>
 		<h1>Task 6</h1>
-		<p>Lorem ipsum</p>
+		<p>
+			Level sampling is choosing the optimal mipmap level to use for sampling. When the original texture is larger than the screen space that it is mapping to, we need to lower its resolution appropriately (filtering 
+			the high frequencies) by convoluting and averaging its pixels. Instead of doing this on the fly, we store precomputed mipmaps to make the process more efficient. Thus level sampling methods are ways of finding 
+			the right mipmap level to use. The formula to finding the right level works by looking at how much a position in texture space changes relative to a change in screen space and scaling it logarithmically. After 
+			getting this level value, there are two different approaches: we can use the mipmap level closest to this value, or we can interpolate between the two nearest mipmap levels and use that (bilinear). 
+		</p>
+		<p>
+			For a comparison of pixel sampling, level sampling, and super sampling, in terms of memory usage super sampling will need a sampling buffer of sampling_rate times larger if done the naive way. Level sampling, which 
+			uses mipmaps, will require the mipmaps to be computed and stored. Pixel sampling should not use a significant amount of additional memory. In terms of speed, super sampling will require at least sample_rate times 
+			more of computation, as it would need to sample sample_rate more times and then also convolute it from the sample buffer to the frame buffer, which should make super sampling the least efficient. Pixel sampling and 
+			level sampling should have similar levels of computation, as they both use nearest pixel/level and bilinear filtering. Since level sampling uses precomputed mipmaps, it is still fairly fast. In the nearest setting, we 
+			only need to do a fast computation for both. Bilinear filtering for pixel sampling involves sampling from 4 texels and then performing 3 linear interpolations. Bilinear filtering for level sampling involves sampling 
+			from the two nearest mipmap levels and then interpolating them. For overall aliasing power, supersampling is the best, but requires the most computation. Level sampling comes second, but requires mipmaps to be precomputed 
+			and stored. Pixel sampling comes last, but does not require additional memory and is relatively fast.
+		</p>
+		<h3>Original image: </h2>
+		<img style="width: 40%"src="kiara_pathetic.png">
+
+		<table style="border: 1px solid">
+			<tr>
+				<td style="text-align: center; font-size: 24px">Sample Rate</td>
+				<td style="text-align: center; font-size: 24px">L_ZERO</td>
+				<td style="text-align: center; font-size: 24px">L_NEAREST</td>
+			</tr>
+			<tr>
+				<td style="text-align: center; font-size: 24px">P_NEAREST</td>
+				<td><img src="zero_nearest.png"></td>
+				<td><img src="nearest_nearest.png"></td>
+			</tr>
+			<tr>
+				<td style="text-align: center; font-size: 24px">P_LINEAR</td>
+				<td><img src="zero_linear.png"></td>
+				<td><img src="nearest_linear.png"></td>
+			</tr>
+		</table>
 
 	</body>
 </html>
