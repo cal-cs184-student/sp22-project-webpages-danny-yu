@@ -16,19 +16,19 @@
 		</p>
 		<table>
 			<tr>
-				<td><img src="curve0.png"></td>
-				<td><img src="curve1.png"></td>
+				<td><img src="curve0.png" style="width: 400px"></td>
+				<td><img src="curve1.png" style="width: 400px"></td>
 			</tr>
 			<tr>
-				<td><img src="curve2.png"></td>
-				<td><img src="curve3.png"></td>
+				<td><img src="curve2.png" style="width: 400px"></td>
+				<td><img src="curve3.png" style="width: 400px"></td>
 			</tr>
 			<tr>
-				<td><img src="curve4.png"></td>
-				<td><img src="curve5.png"></td>
+				<td><img src="curve4.png" style="width: 400px"></td>
+				<td><img src="curve5.png" style="width: 400px"></td>
 			</tr>
 		</table>
-		<img src = "curve6.png">
+		<img src = "curve6.png" style="width: 400px">
 
 		<h1>Part 2</h1>
 		<p>
@@ -37,7 +37,7 @@
 			evaluate to first obtain the control points on the u plane by calling evaluate1D on each row of control points with parameter u as our t. We then call evaulate1D on these control points using v as our t to finally obtain the final point on this 
 			Bezier patch given u, v.
 		</p>
-		<img src="teapotBez.png">
+		<img src="teapotBez.png" style="width: 400px">
 		<h1>Part 3</h1>
 		<p>
 			To calculate the area-weighted unit normal vector at a vertex, we have to use mesh traversal to get the three vertices for each face that this vertex is in. With the position of each vertex, we can make two different vectors that run along this 
@@ -46,15 +46,34 @@
 		</p>
 		<table>
 			<tr>
-				<td><img src="teapotNoShading.png"></td>
-				<td><img src="teapotWithShading.png"></td>
+				<td><img src="teapotNoShading.png" style="width: 400px"></td>
+				<td><img src="teapotWithShading.png" style="width: 400px"></td>
 			</tr>
 		</table>
 
 		<h1>Part 4</h1>
 		<p>
-			
+			While implementing the edge flip operation, we first drew out before and after diagrams with all the mesh components labeled: edges, halfedges, vertices, and faces. This way, we were able to clearly visualize how the pointer assignments for 
+			each mesh element change. 
 		</p>
+		<p>
+			To simplify our coding process, we created pointers corresponding to each of the edges, halfedges, vertices, and faces around the flipped edge. This way, we could easily reassign pointers to the desired mesh element. To simplify the process 
+			of setting all the pointers for each halfedge, we used setNeighbors. There weren't that many debugging issues, since the process is relatively straightforward as long as we carefully checked each of the pointer assignments. 
+		</p>
+		<h3>Edge flips: </h3>
+		<table>
+			<tr>
+				<td><img src="beforeFlip.png" style="width: 400px"></td>
+				<td><img src="afterFlip.png" style="width: 400px"></td>
+			</tr>
+		</table>
+		<h3>Boundaries cannot be flipped: </h3>
+		<table>
+			<tr>
+				<td><img src="beforeBoundaryFlip.png" style="width: 400px"></td>
+				<td><img src="afterBoundaryFlip.png" style="width: 400px"></td>
+			</tr>
+		</table>
 
 		<h1>Part 5</h1>
 		<p>
@@ -68,25 +87,75 @@
 		<h3>Edge splits: </h3>
 		<table>
 			<tr>
-				<td><img src="beforeSplit.png"></td>
-				<td><img src="afterSplit1.png"></td>
+				<td><img src="beforeSplit.png" style="width: 400px"></td>
+				<td><img src="afterSplit1.png" style="width: 400px"></td>
 			</tr>
 			<tr>
-				<td><img src="afterSplit2.png"></td>
-				<td><img src="afterSplit3.png"></td>
+				<td><img src="afterSplit2.png" style="width: 400px"></td>
+				<td><img src="afterSplit3.png" style="width: 400px"></td>
 			</tr>
 		</table>
 		<h3>Edge splits and flips: </h3>
 		<table>
 			<tr>
-				<td><img src="beforeSplit.png"></td>
-				<td><img src="afterSplit1.png"></td>
+				<td><img src="beforeSplit.png" style="width: 400px"></td>
+				<td><img src="afterSplit1.png" style="width: 400px"></td>
 			</tr>
 		</table>
 		<h1>Part 6</h1>
 		<p>
-			
+			The loop subdivision process has several parts: (1) split every edge in the graph, (2) flip new edges that connect an old vertex and a new vertex, and (3) update vertex positions to make the resulting upsampled mesh smoother. The implementation 
+			process we used does these steps in a slightly different order, however: because the last step of updating vertex positions is dependent on the original location of the vertices, we first calculate and store the positions the vertices will be 
+			updated to. Then, we split and flip edges, and finally we used the stored new vertex positions to update the positions of all vertices. 
 		</p>
+		<p>
+			While we were implementing loop subdivision, we first forgot to mark edges as new versus not new, causing more edges to be flipped than should have been. We also didn't initially reset the isNew variables and the edge newPosition variables, 
+			causing problems when multiple loop subdivisions were done in sequence. 
+		</p>
+		<p>
+			After loop subdivision, meshes become smoother and sharp edges/corners are rounded out. It is possible to approximately preserve edges by creating a higher density of mesh triangles in the area where detail is trying to be preserved, but a lot 
+			of the sharpness still is reduced after loop subdivision. 
+		</p>
+		<h3>Upsampling on cube mesh: </h3>
+		<table>
+			<tr>
+				<td><img src="cube1.png" style="width: 400px"></td>
+				<td><img src="cube2.png" style="width: 400px"></td>
+			</tr>
+			<tr>
+				<td><img src="cube3.png" style="width: 400px"></td>
+				<td><img src="cube4.png" style="width: 400px"></td>
+			</tr>
+			<tr>
+				<td><img src="cube5.png" style="width: 400px"></td>
+				<td><img src="cube6.png" style="width: 400px"></td>
+			</tr>
+		</table>
+		<h3>Attempt at preserving sharp edge: </h3>
+		<table>
+			<tr>
+				<td><img src="edge1.png" style="width: 400px"></td>
+				<td><img src="edge2.png" style="width: 400px"></td>
+			</tr>
+			<tr>
+				<td><img src="edge3.png" style="width: 400px"></td>
+			</tr>
+		</table>
+		<p>
+			As we can see in the first set of upsampling screenshots, the current cube mesh ends up as a slightly asymmetrical oblong round shape when many upsampling steps are performed. To preserve symmetry in this mesh after upsampling, we can split the edge running diagonally across each cube face to make 
+			each of the faces symmetrical; this ensures that the mesh shape after upsampling is also symmetrical. 
+		</p>
+		<h3>Preserving symmetry on upsampled cube mesh: </h3>
+		<table>
+			<tr>
+				<td><img src="symmetry1.png" style="width: 400px"></td>
+				<td><img src="symmetry2.png" style="width: 400px"></td>
+			</tr>
+			<tr>
+				<td><img src="symmetry3.png" style="width: 400px"></td>
+				<td><img src="symmetry4.png" style="width: 400px"></td>
+			</tr>
+		</table>
 
 	</body>
 </html>
