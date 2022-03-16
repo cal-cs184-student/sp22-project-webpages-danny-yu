@@ -46,6 +46,42 @@
 			and direction w_in and we initialize its min_t value as EPS_F and max_t values as the distance to the light - EPS_F. If there is any intersection along this ray, then the radiance is 0. Otherwise, we proceed with the final calculation, which is the 
 			same as above: f * L * cosTheta / pdf. Lastly, we divide our accumulated L_out by num_samples (which is equal to the number of lights * ns_area_light).
 		</p>
+		<h3> Hemisphere vs Importance comparison</h3>
+		<table>
+			<tr>
+				<td style="text-align: center;">Hemisphere sampling (-s 16 -l 8)</td>
+				<td style="text-align: center;">Importance sampling (-s 16 -l 8)</td>
+			</tr>
+			<tr>
+				<td><img src="bunny_s16_l8_hemisphere.png"></td>
+				<td><img src="bunny_s16_l8_importance.png"></td>
+			</tr>
+		</table>
+		<p>
+			When rendered with the same settings (16 samples per pixel, 8 light rays) we notice that hemisphere sampling is extremely noisy throughout the whole image while importance sampling created an image with little noise. This is because the light in 
+			the scene only covers a tiny portion of the room so there is a low chance that the light gets sampled correctly in hemisphere sampling, which leads to the many dark, noisy pixels in our image. On the other hand, this is not an issue using 
+			importance sampling, since we always sample from the light, so we notice that areas such as the walls where there is definitely nothing blocking the light from it seems smooth with minimal noise. However, the edges of the shadow still appear to be 
+			a little noisy, and that's because there is more randomness in whether the ray from those points will intersect with the rabbit or not, blocking the light. 
+		</p>
+		<h3>Light sampling comparison with 1 sample per pixel</h3>
+		<table>
+			<tr>
+				<td style="text-align: center;">1 light ray</td>
+				<td style="text-align: center;">4 light rays</td>
+			</tr>
+			<tr>
+				<td><img src="bunny_s1_l1_importance.png"></td>
+				<td><img src="bunny_s1_l4_importance.png"></td>
+			</tr>
+			<tr>
+				<td style="text-align: center;">16 light ray</td>
+				<td style="text-align: center;">64 light rays</td>
+			</tr>
+			<tr>
+				<td><img src="bunny_s1_l16_importance.png"></td>
+				<td><img src="bunny_s1_l64_importance.png"></td>
+			</tr>
+		</table>
 		<h1>Part 3</h1>
 		<p>
 			
