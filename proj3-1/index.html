@@ -60,7 +60,7 @@
 	We can also see the slowdown here when rendering the beetle first with, and then without the BVH acceleration.
 	<img src="beetle_slow_down.png">
 </br>
-Finally here are some pictures to show examples of our BVH structure.  These were taken with my computer's default screenshot tool because the build in screenshot and rendering options do not allow for shots of non-renders.  
+Finally here are some pictures to show examples of our BVH structure.  These were taken with my computer's default screenshot tool because the build in screenshot and rendering options do not allow for shots of non-renders.
 </br>
 <table>
 	<tr>
@@ -82,6 +82,43 @@ Finally here are some pictures to show examples of our BVH structure.  These wer
 			intersection with our w_on and w_in, and we can set this term to f. Lastly we need to get the angle of our new ray to the normal of the original intersection, which we can simply calculate as the dot product of the intersection normal and o2w * w_in,
 			and we can call this cosTheta. Our final term that we add to L_out is f * L * cosTheta / pdf. We do this for num_samples times, and then average out the accumulated L_out by dividing it by num_samples before we return L_out.
 		</p>
+		<h3> Hemisphere vs Importance comparison</h3>
+		<table>
+			<tr>
+				<td style="text-align: center;">Hemisphere sampling (-s 16 -l 8)</td>
+				<td style="text-align: center;">Importance sampling (-s 16 -l 8)</td>
+			</tr>
+			<tr>
+				<td><img src="bunny_s16_l8_hemisphere.png"></td>
+				<td><img src="bunny_s16_l8_importance.png"></td>
+			</tr>
+		</table>
+		<p>
+			When rendered with the same settings (16 samples per pixel, 8 light rays) we notice that hemisphere sampling is extremely noisy throughout the whole image while importance sampling created an image with little noise. This is because the light in
+			the scene only covers a tiny portion of the room so there is a low chance that the light gets sampled correctly in hemisphere sampling, which leads to the many dark, noisy pixels in our image. On the other hand, this is not an issue using
+			importance sampling, since we always sample from the light, so we notice that areas such as the walls where there is definitely nothing blocking the light from it seems smooth with minimal noise. However, the edges of the shadow still appear to be
+			a little noisy, and that's because there is more randomness in whether the ray from those points will intersect with the rabbit or not, blocking the light.
+		</p>
+		<h3>Light sampling comparison with 1 sample per pixel</h3>
+		<table>
+			<tr>
+				<td style="text-align: center;">1 light ray</td>
+				<td style="text-align: center;">4 light rays</td>
+			</tr>
+			<tr>
+				<td><img src="bunny_s1_l1_importance.png"></td>
+				<td><img src="bunny_s1_l4_importance.png"></td>
+			</tr>
+			<tr>
+				<td style="text-align: center;">16 light ray</td>
+				<td style="text-align: center;">64 light rays</td>
+			</tr>
+			<tr>
+				<td><img src="bunny_s1_l16_importance.png"></td>
+				<td><img src="bunny_s1_l64_importance.png"></td>
+			</tr>
+		</table>
+		<h1>Part 3</h1>
 		<p>
 			For importance sampling, the operations are mostly similar. We begin by iterating over the lights in the scene with the intention to generate ns_area_light number of samples per light. If it is a direct light, then we will only sample it once but
 			weigh its contribution by a factor of ns_area_light times. To generate a sample for a light, we will call sample_L on the light to obtain the radiance from the light, the w_in, the distance to light, and the pdf. We generate a ray with origin hit_p
