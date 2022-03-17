@@ -35,6 +35,10 @@
 		</table>
 		<h1>Part 2</h1>
 		<p>
+
+		</p>
+		<h1>Part 3</h1>
+		<p>
 			For hemisphere sampling, the pdf is always 1/2*PI and we can sample w_in randomly from the provided hemisphereSampler. We then create a new ray that starts at hit_p with direction o2w * w_in to represent the one bounce lighting. If the ray 
 			intersects something in this BVH, then we know the radiance is the zero bounce radiance at that intersection along this ray, and we set this vector to L. If there is no intersection, then L is 0. We also need to evaluate the BSDF at the original 
 			intersection with our w_on and w_in, and we can set this term to f. Lastly we need to get the angle of our new ray to the normal of the original intersection, which we can simply calculate as the dot product of the intersection normal and o2w * w_in, 
@@ -82,14 +86,98 @@
 				<td><img src="bunny_s1_l64_importance.png"></td>
 			</tr>
 		</table>
-		<h1>Part 3</h1>
-		<p>
-			
-		</p>
 		<h1>Part 4</h1>
 		<p>
-			
+			To implement indirect lighting, we wrote a recursive lighting function. First, we will add the one_bounce_radiance from the given intersection into our L_out. If we have already reached the max ray depth, then we will simply return this. Else, we 
+			continue with the rest of the function. We want to use sample the bsdf of the given intersection by calling sample_f, giving us the f value, the w_in, and the pdf. Next we will generate a new ray from hit_p with direction o2w * w_in to represent 
+			the next ray we're trying to trace. We will need to set the depth of this new ray to the current ray's depth + 1. Next, we check whether this ray intersects with anything in the BVH. If there is no intersection, then we return the current L_out. 
+			If there is an intersection, we use the Russian Roulette to randomly decide whether or not to continue. We set our continuation probability (cpdf) to be a constant 0.7. If we continue, then will continue the recursive call and accumulate it into 
+			our L_out. Lastly, we return the final L_out.
 		</p>
+		<h3>Scenes rendered with 1024 samples, 1 light ray, and max ray depth of 5</h3>
+		<table>
+			<tr>
+				<td style="text-align: center;">CBbunny</td>
+				<td style="text-align: center;">CBSpheres_lambertian</td>
+			</tr>
+			<tr>
+				<td><img src="bunny_s1024_l1_m5.png"></td>
+				<td><img src="spheres_s1024_l1_m5.png"></td>
+			</tr>			
+		</table>
+		<h3>Only direct lighting vs Only indirect lighting</h3>
+		<table>
+			<tr>
+				<td style="text-align: center;">Only direct (zero bounce + 1 bounce)</td>
+				<td style="text-align: center;">Only indirect (more than 1 bounce, max 5 bounces)</td>
+			</tr>
+			<tr>
+				<td><img src="bunny_only_direct.png"></td>
+				<td><img src="bunny_only_indirect.png"></td>
+			</tr>	
+		</table>
+		<h3>CBbunny rendered with 1024 samples, 1 light ray, and different max ray depths</h3>
+		<table>
+			<tr>
+				<td style="text-align: center;">m = 0</td>
+				<td style="text-align: center;">m = 1</td>
+			</tr>
+			<tr>
+				<td><img src="bunny_s1024_l1_m0.png"></td>
+				<td><img src="bunny_s1024_l1_m1.png"></td>
+			</tr>
+			<tr>
+				<td style="text-align: center;">m = 2</td>
+				<td style="text-align: center;">m = 3</td>
+			</tr>
+			<tr>
+				<td><img src="bunny_s1024_l1_m2.png"></td>
+				<td><img src="bunny_s1024_l1_m3.png"></td>
+			</tr>
+			<tr>
+				<td style="text-align: center;">m = 5</td>
+				<td style="text-align: center;">m = 100</td>
+			</tr>
+			<tr>
+				<td><img src="bunny_s1024_l1_m5.png"></td>
+				<td><img src="bunny_s1024_l1_m100.png"></td>
+			</tr>	
+		</table>
+		<h3>CBSpheres_lambertian comparison with 4 light rays and max ray depth of 5</h3>
+		<table>
+			<tr>
+				<td style="text-align: center;">1 sample</td>
+				<td style="text-align: center;">2 samples</td>
+			</tr>
+			<tr>
+				<td><img src="spheres_s1_l4_m5.png"></td>
+				<td><img src="spheres_s2_l4_m5.png"></td>
+			</tr>
+			<tr>
+				<td style="text-align: center;">4 samples</td>
+				<td style="text-align: center;">8 samples</td>
+			</tr>
+			<tr>
+				<td><img src="spheres_s4_l4_m5.png"></td>
+				<td><img src="spheres_s8_l4_m5.png"></td>
+			</tr>
+			<tr>
+				<td style="text-align: center;">16 samples</td>
+				<td style="text-align: center;">64 samples</td>
+			</tr>
+			<tr>
+				<td><img src="spheres_s16_l4_m5.png"></td>
+				<td><img src="spheres_s64_l4_m5.png"></td>
+			</tr>
+			<tr>
+				<td style="text-align: center;">1024 samples</td>
+				<td style="text-align: center;"></td>
+			</tr>
+			<tr>
+				<td><img src="spheres_s1024_l4_m5.png"></td>
+				<td></td>
+			</tr>
+		</table>
 		<h1>Part 5</h1>
 		<p>
 			
