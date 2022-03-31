@@ -6,6 +6,8 @@
 		<p>
 			In this project, we implemented our pathtracing renderer by implementing rays and ray tracing, defining ray intersections with triangles, spheres, and bounding boxes, setting up the bounding volume hiearchy recursively, defining the BSDF for
 			diffuse surfaces, estimating direct lighting via sampling through uniform hemisphere or importance, implementing global illumination through recursion and Russian Roulette termination, and implementing adaptive sampling.
+
+			The main problems we encountered were with the bounding volume hiearchy and importance multiple bounce ray-tracing.  For the BVH we were confused by how to update the min_t and max_t for the ray, but discovered that since this was covered by the triangles, with max_t, in the end we did not need to, and only had to implement an addional check on min_t and max_t.  Our general debugging process involved analyzing the images and trying to think about what could have caused these bugs in code.  
 		</p>
 		<h1>Part 1</h1>
 		<p>
@@ -126,10 +128,10 @@
 		</table>
 		<h1>Part 4</h1>
 		<p>
-			To implement indirect lighting, we wrote a recursive lighting function. First, we will add the one_bounce_radiance from the given intersection into our L_out. If we have already reached the max ray depth, then we will simply return this. Else, we 
-			continue with the rest of the function. We want to use sample the bsdf of the given intersection by calling sample_f, giving us the f value, the w_in, and the pdf. Next we will generate a new ray from hit_p with direction o2w * w_in to represent 
-			the next ray we're trying to trace. We will need to set the depth of this new ray to the current ray's depth + 1. Next, we check whether this ray intersects with anything in the BVH. If there is no intersection, then we return the current L_out. 
-			If there is an intersection, we use the Russian Roulette to randomly decide whether or not to continue. We set our continuation probability (cpdf) to be a constant 0.7. If we continue, then will continue the recursive call and accumulate it into 
+			To implement indirect lighting, we wrote a recursive lighting function. First, we will add the one_bounce_radiance from the given intersection into our L_out. If we have already reached the max ray depth, then we will simply return this. Else, we
+			continue with the rest of the function. We want to use sample the bsdf of the given intersection by calling sample_f, giving us the f value, the w_in, and the pdf. Next we will generate a new ray from hit_p with direction o2w * w_in to represent
+			the next ray we're trying to trace. We will need to set the depth of this new ray to the current ray's depth + 1. Next, we check whether this ray intersects with anything in the BVH. If there is no intersection, then we return the current L_out.
+			If there is an intersection, we use the Russian Roulette to randomly decide whether or not to continue. We set our continuation probability (cpdf) to be a constant 0.7. If we continue, then will continue the recursive call and accumulate it into
 			our L_out. Lastly, we return the final L_out.
 		<h3>Scenes rendered with 1024 samples, 1 light ray, and max ray depth of 5</h3>
 		<table>
@@ -140,7 +142,7 @@
 			<tr>
 				<td><img src="bunny_s1024_l1_m5.png"></td>
 				<td><img src="spheres_s1024_l1_m5.png"></td>
-			</tr>			
+			</tr>
 		</table>
 		<h3>Only direct lighting vs Only indirect lighting</h3>
 		<table>
@@ -151,7 +153,7 @@
 			<tr>
 				<td><img src="bunny_only_direct.png"></td>
 				<td><img src="bunny_only_indirect.png"></td>
-			</tr>	
+			</tr>
 		</table>
 		<h3>CBbunny rendered with 1024 samples, 1 light ray, and different max ray depths</h3>
 		<table>
@@ -178,7 +180,7 @@
 			<tr>
 				<td><img src="bunny_s1024_l1_m5.png"></td>
 				<td><img src="bunny_s1024_l1_m100.png"></td>
-			</tr>	
+			</tr>
 		</table>
 		<h3>CBSpheres_lambertian comparison with 4 light rays and max ray depth of 5</h3>
 		<table>
@@ -217,7 +219,19 @@
 		</table>
 		<h1>Part 5</h1>
 		<p>
+			Adaptive sampling works by ensuring we are not sending too many rays to pixels that are not very complicated to calculate.  We do this by sending sets of rays into the scene and check whether they have returned similar results.  For easy parts of the image almost all the rays will be returning the same value, so we can end early and save computation.  For more difficult parts, such as an area with a few partial shadows, it requires more work since some rays return light or darkness, and thus we have to iterate through more.
 
+			Here is our image of a bunny rendered using adaptive sampling and 2024 samples per pixel.  As the rate image shows, easier objects like walls have quite few samples than the darker parts of the bunny.  This image is not identical to the one on the spec, but is probably due to differences/errors in raytracing in general and not this algorithm.  Nevertheless, the basic function of adaptive sampling is functional, in sampling the harder to render regions.
+
+		</br>
+			<td><img src="bunny.png"></td>
+			<td><img src="bunny_rate.png"></td>
 		</p>
+
+		<h1>Collaboration</h1>
+		<p>
+			For this project we tried to code together when possible, but due to scheduling some parts had to be done by one person mostly solo.  We both worked towards finding and fixing bugs after we had gotten through part 5.  While it would have been good to work equally on the entire project, working more on specific sections definitely made those easier to remember and understand.  Overall we have gained a sense for the basic rendering pipeline, and certain efficiency improving methods.
+		<p>
+
 	</body>
 </html>
