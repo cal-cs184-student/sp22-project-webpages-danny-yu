@@ -8,11 +8,62 @@
 		</p>
 		<h1>Part 1</h1>
 		<p>
-
+			In part 1, we implemented reflection and refraction in glass and mirror materials. We did this by implementing the reflection and refraction functions and writing the sample_f functions for the glass and mirror BSDFs. 
+			Calculating the perfect specular reflection of a given angle is fairly straightforward by using the formula w_out = -w_in + 2 * dot(w_in, n) * n. Calculating the refracted angle is a little bit more complicated. First, 
+			we have to figure out whether we are entering or exiting the object, which is decided by the sign on w_out's z value. Then, we can check if we have total internal reflection, which is when the inside of our square root 
+			on the z value of w_in, the vector we're trying to output, is less than 0. With that, we figure out the x, y, z values of our w_in from the x, y, z values of w_out and whether we are entering or exiting. One thing to note 
+			is that the z value of w_in will always be of the opposite sign of the z value for w_out. Implementing the bsdf for the mirror material is fairly straightforward, as it will always reflect in the same angle, so we can simply 
+			call our reflect function and be done with it. The glass material, which reflects and refracts, require using Schlick's approximation to randomly decide whether to reflect or refract. To compute Schlick's reflection coefficient R, 
+			we use the normalized halfway vector of w_in and w_out to replace the normal to calculate the cosine of the angle. To calculate R0, we assume n1 = 1, since we only have air in our scenes, and we let n2 be the index of reflection. 
+			Thus, given the probability R, there is an R chance that it will reflect and a (1-R) chance that it will refract.
 		</p>
+		<h2>Images rendered with s = 64, l = 16</h2>
+		<h3>m = 0</h3>
+		<img src="spheres_s64_l16_m0.png">
+		<p>
+			This is a standard image of showing only light shot from the light source directly into the camera.
+		</p>
+			
+		<h3>m = 1</h3>
+		<img src="spheres_s64_l16_m1.png">
+		<p>
+			This is direct lighting, where light bounces at most once. Here we see that the walls and floor are illuminated, but the spheres are mostly black save for the specular highlights. This is because the only areas that the rays from the light 
+			source that reflects directly into the camera are the specular highlights. The specular highlight on the sphere in the front is somewhat fuzzy, and that is probably because of the Shlick approximation, where there is a random chance of 
+			reflection rather than always reflecting like the mirror sphere behind it.
+		</p>
+
+		<h3>m = 2</h3>
+		<img src="spheres_s64_l16_m2.png">
+		<p>
+			The main thing to note is that the spheres now have significantly more detail on it, and it's not just pure black or specular highlight. This is because light has reflected off the walls, then reflected off the spheres, so we can begin to see 
+			the reflection of the environment with 2 bounces. As mentioned before, the reflection on the glass sphere is dimmer since it only has a random chance at reflecting. Also note that we have not seen refraction yet.
+		</p>
+
+		<h3>m = 3</h3>
+		<img src="spheres_s64_l16_m3.png">
+		<p>
+			We now can see the effects of reflection with m = 3. This is because the first bounce will hit the sphere, the second bounce will go through and hit the inside of the sphere, and the third bounce will leave the sphere. This lets us see through 
+			the sphere with the refracted light. The bright spot under the sphere is from light entering the sphere, bouncing in the sphere, then exiting and bouncing off the ground. 
+		</p>
+
+		<h3>m = 4</h3>
+		<img src="spheres_s64_l16_m4.png">
+		<p>
+			The image is mostly the same except now the reflection of the glass sphere on the mirror sphere is properly colored. This is because after three bounces, light that goes through the glass sphere will hit the mirror sphere and on the fourth bounce 
+			it will reflect off the glass sphere.
+		</p>
+
+		<h3>m = 5</h3>
+		<img src="spheres_s64_l16_m5.png">
+		<p>All the initial reflections and refractions has already happened, so not much changes in the image.</p>
+
+		<h3>m = 100</h3>
+		<img src="spheres_s64_l16_m100.png">
+		<p>The same as above, except the quality of the global illumination is better. </p>
+
 		<h1>Part 2</h1>
 		<p>
-			
+
 		</p>
 	</body>
 </html>
