@@ -2,18 +2,74 @@
 	<head>
 	</head>
 	<body>
-		<h1>Project 4 Write-up</h1>>
+		<h1>Project 4 Write-up</h1>
 		<h1>Overview</h1>
-		<p>
-
-		</p>
+			<p>
+				In this project, we simulated a cloth in realtime using a mass and spring based system. First, we created the cloth through discrete point masses and spring constraints. Then, we calculated the forces on the point masses and their new positions for each time frame to simulate movement. Next, we implemented collisions through detection of a collision of a cloth with a sphere or a plane and applying an opposing force to the cloth. We also implemented self-collision through using a hashed spatial map to efficiently calculate whether nearby point masses are colliding. Lastly, we implemented different kinds of shading using GLSL.
+			</p>
 		<h1>Part 1</h1>
+		<img src="p1_cloth.png">
 		<p>
-
+			For this part, we simply had to initialize the point masses and the springs, which was rather straightforward. We first create the grid of point masses, setting their position according to the orientation of the cloth. We then iterate through the pinned vector to pin the corresponding point masses. Next, we just iterate through every point mass on the grid, we check to see whether it is appropriate to create each kind of spring.
 		</p>
+		<table>
+			<tr>
+				<td>No shearing constraints</td>
+				<td>Only shearing constraints</td>
+				<td>All constraints</td>
+			</tr>
+			<tr>
+				<td><img src="p1_without_shearing.png" style="width:100%"></td>
+				<td><img src="p1_with_only_shearing.png" style="width:100%"></td>
+				<td><img src="p1_with_all_constraints.png" style="width:100%"></td>
+			</tr>
+		</table>
 		<h1>Part 2</h1>
+		<img src="p2_final.png">
 		<p>
-
+			This is pinned4.json with default parameters in its final resting state.
+		</p>
+		<h4>Spring Constant Comparison</h4>
+		<table>
+			<tr>
+				<td>ks = 100</td>
+				<td>ks = 10000</td>
+			</tr>
+			<tr>
+				<td><img src="p2_low_ks.png"></td>
+				<td><img src="p2_high_ks.png"></td>			
+			</tr>
+		</table>
+		<p>
+			With a high ks, the cloth seems to be held together much more firmly, while with a low ks the cloth seems rather loose. While they both still follow roughly the same motion as they fall, the low ks seems much more bouncy and loses its shape quickly, while the high ks manages to mostly maintain its shape.
+		</p>
+		<h4>Density Comparison</h4>
+		<table>
+			<tr>
+				<td>density = 3</td>
+				<td>density = 100</td>
+			</tr>
+			<tr>
+				<td><img src="p2_low_density.png"></td>
+				<td><img src="p2_high_density.png"></td>			
+			</tr>
+		</table>
+		<p>
+			Visually, changing density is very similar to changing ks, as a high density makes the cloth droop more, while a low density makes the cloth look not as strained. The falling still follows pretty much the same motion, but with high density you can tell clearly how the middle portion of the cloth bounces a few times before coming to its final resting state, while for low density it doesn't really bounce. 
+		</p>
+		<h4>Damping Comparison</h4>
+		<table>
+			<tr>
+				<td>damping = 0%</td>
+				<td>damping = 90%</td>
+			</tr>
+			<tr>
+				<td><img src="p2_low_damping.png"></td>
+				<td><img src="p2_high_damping.png"></td>
+			</tr>
+		</table>
+		<p>
+			These two pictures show the cloth in motion. Changing the damping greatly changes the speed at which the cloth moves. With low damping, the cloth falls quicker and faster, the movements seem much more jittery, and the cloth deforms. For example, the image showing low damping captures the moment when the cloth swings all the way to the other side from the initial position and swings back again. With high damping, the cloth falls slowly and maintains its shape well, as shown in the picture.
 		</p>
 		<h1>Part 3</h1>
 		<p>
@@ -25,7 +81,7 @@
 		</p>
 		<h1>Part 5</h1>
 		<p>
-			
+
 		</p>
 	</body>
 </html>
