@@ -37,7 +37,7 @@
 			</tr>
 			<tr>
 				<td><img src="p2_low_ks.png"></td>
-				<td><img src="p2_high_ks.png"></td>			
+				<td><img src="p2_high_ks.png"></td>
 			</tr>
 		</table>
 		<p>
@@ -51,11 +51,11 @@
 			</tr>
 			<tr>
 				<td><img src="p2_low_density.png"></td>
-				<td><img src="p2_high_density.png"></td>			
+				<td><img src="p2_high_density.png"></td>
 			</tr>
 		</table>
 		<p>
-			Visually, changing density is very similar to changing ks, as a high density makes the cloth droop more, while a low density makes the cloth look not as strained. The falling still follows pretty much the same motion, but with high density you can tell clearly how the middle portion of the cloth bounces a few times before coming to its final resting state, while for low density it doesn't really bounce. 
+			Visually, changing density is very similar to changing ks, as a high density makes the cloth droop more, while a low density makes the cloth look not as strained. The falling still follows pretty much the same motion, but with high density you can tell clearly how the middle portion of the cloth bounces a few times before coming to its final resting state, while for low density it doesn't really bounce.
 		</p>
 		<h4>Damping Comparison</h4>
 		<table>
@@ -73,15 +73,158 @@
 		</p>
 		<h1>Part 3</h1>
 		<p>
-
+			<figure>
+  			<img src="images/500ks.png" alt="Trulli" style="width:100%">
+  			<figcaption>Cloth 500ks</figcaption>
+			</figure>
+			<figure>
+  			<img src="images/5000ks.png" alt="Trulli" style="width:100%">
+  			<figcaption>Cloth 5000ks</figcaption>
+			</figure>
+			<figure>
+  			<img src="images/50000ks.png" alt="Trulli" style="width:100%">
+  			<figcaption>Cloth 50000ks</figcaption>
+			</figure>
 		</p>
 		<h1>Part 4</h1>
 		<p>
+			<table>
+				<tr>
+					<td><img src="images/collision1.png" style="width:100%"></td>
+					<td><img src="images/collision2.png" style="width:100%"></td>
+					<td><img src="images/collision3.png" style="width:100%"></td>
+					<td><img src="images/collision4.png" style="width:100%"></td>
+				</tr>
+			</table>
+			<figure>
+  			<img src="images/collision_perspective.png" alt="Trulli" style="width:100%">
+  			<figcaption>Final Resting State</figcaption>
+			</figure>
+		</br>
+		<table>
+			<tr>
+				<td>High spring constant</td>
+				<td>High density</td>
+				<td>Even higher spring constant</td>
+			</tr>
+			<tr>
+				<td><img src="images/high_spring.png" style="width:100%"></td>
+				<td><img src="images/high_density.png" style="width:100%"></td>
+				<td><img src="images/even_higher_spring.png" style="width:100%"></td>
+			</tr>
+		</table>
 
+		As seen above, high spring constant acts as a flatting force, and at very high values almost returns the cloth to a perfectly flat state.  High density on the other hand means each particle of the cloth is influenced very little by its neigbooring points, causing a more bumpy final position.
 		</p>
 		<h1>Part 5</h1>
 		<p>
+			Vertex shaders work by the changing the actual position of vertices in screen space for the final render.  This means that while in code objects will retain their original shape, in the render they will look stretched or distorted as per the shader operation.  Fragment shaders cannot move vertices, instead relying on normal values and light sources to affect the color of parts of the triangle.
+		</br>
+		</br>
+		Blinn Phong shading tries to accurately simulate the material given the specular and diffuse coefficients of the material, as well as the ambient light.  It computes the reflection across the normal for specular and across the h vector for diffuse, adding a constant term for ambience.
+		</br>
+		<table>
+			<tr>
+				<td>Ambient light only</td>
+				<td>Diffuse reflections only</td>
+				<td>Specular reflections only</td>
+				<td>Phong Shading</td>
+			</tr>
+			<tr>
+				<td><img src="images/ambient.png" style="width:100%"></td>
+				<td><img src="images/diffuse.png" style="width:100%"></td>
+				<td><img src="images/specular.png" style="width:100%"></td>
+				<td><img src="images/phong.png" style="width:100%"></td>
+			</tr>
+		</table>
 
+	</br>
+	</br>
+	Here are screenshots of our texture shader using a custom planet texture.
+	</br>
+	<table>
+		<tr>
+			<td><img src="images/custom_texture.png" style="width:100%"></td>
+			<td><img src="images/custom_texture2.png" style="width:100%"></td>
+		</tr>
+	</table>
+
+</br>
+</br>
+Here are our examples of bump and displacement mapping.  Using higher poly meshes seems to create noticable noise in the case of bump shading, but for displacement shading the difference is less noticeable.
+</br>
+<table>
+	<tr>
+		<td>Standard bump mapping</td>
+		<td>Standard displacement mapping</td>
+	</tr>
+	<tr>
+		<td><img src="images/bump.png" style="width:100%"></td>
+		<td><img src="images/displacement.png" style="width:100%"></td>
+	</tr>
+</table>
+</br>
+<table>
+	<tr>
+		<td>Bump mapping with low poly mesh</td>
+		<td>Displacement mapping with low poly mesh</td>
+	</tr>
+	<tr>
+		<td><img src="images/bump_16.png" style="width:100%"></td>
+		<td><img src="images/displacement_16.png" style="width:100%"></td>
+	</tr>
+</table>
+</br>
+<table>
+	<tr>
+		<td>Bump mapping with high poly mesh</td>
+		<td>Displacement mapping with high poly mesh</td>
+	</tr>
+	<tr>
+		<td><img src="images/bump_128.png" style="width:100%"></td>
+		<td><img src="images/displacement_128.png" style="width:100%"></td>
+	</tr>
+</table>
+</br>
+Also for fun, here is a displacement shading usinng the planet from earlier as the texture.
+</br>
+<figure>
+	<img src="images/planet.png" alt="Trulli" style="width:100%">
+	<figcaption>Planet displacement map</figcaption>
+</figure>
+
+</br>
+</br>
+Examples of our mirror shader.
+</br>
+<table>
+	<tr>
+		<td>Mirror on the initial flat cloth</td>
+		<td>Mirror cloth having fallen on the sphere</td>
+	</tr>
+	<tr>
+		<td><img src="images/mirror1.png" style="width:100%"></td>
+		<td><img src="images/mirror2.png" style="width:100%"></td>
+	</tr>
+</table>
+</br>
+</br>
+We experimented a little bit with custom shaders this project, doing some similar to cel shading, made by limiting the color spectrum and coloring near horizontal edges black to create an outline.  We also made one which turns the render blocky by floor dividing positions to fixed multiples.  Here are a few cool examples.
+</br>
+<table>
+	<tr>
+		<td>Pseudo-cel-shading applied to normal coloring</td>
+		<td>Shader blockifying the mirror texture into a few cubic regions</td>
+		<td>Blockification of normal shading</td>
+		<td>Zoom in on a shaded sphere</td>
+	</tr>
+	<tr>
+		<td><img src="images/cel_normal.png" style="width:100%"></td>
+		<td><img src="images/smaller_blocks.png" style="width:100%"></td>
+		<td><img src="images/blocky_normal.png" style="width:100%"></td>
+		<td><img src="images/sphere_thing.png" style="width:100%"></td>
+	</tr>
+</table>
 		</p>
 	</body>
 </html>
